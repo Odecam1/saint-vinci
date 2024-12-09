@@ -1,6 +1,6 @@
 module.exports = {
   plugins: ["react", "tailwindcss"],
-  extends: ["eslint:recommended", "prettier", "next"],
+  extends: ["eslint:recommended", "prettier", "next", "plugin:tailwindcss/recommended", "plugin:react/recommended"],
   env: {
     es2022: true,
     node: true,
