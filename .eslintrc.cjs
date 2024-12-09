@@ -1,17 +1,12 @@
-export default {
-  root: true,
+module.exports = {
+  plugins: ["react", "tailwindcss"],
   extends: ["eslint:recommended", "prettier", "next"],
-  plugins: [
-    "react/recommended",
-    "tailwindcss/recommended",
-    "react",
-    "react-hooks",
-  ],
   env: {
     es2022: true,
     node: true,
   },
   parserOptions: {
+    ecmaVersion: "latest",
     sourceType: "module",
   },
   rules: {
@@ -91,4 +86,4 @@ export default {
       version: "detect",
     },
   },
-};
+}

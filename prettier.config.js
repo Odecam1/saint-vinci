@@ -1,1 +1,1 @@
-export default { semi: false }
+module.exports = { semi: false }
