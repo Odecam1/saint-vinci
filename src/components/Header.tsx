@@ -1,11 +1,17 @@
 import routes from "@/utils/routes"
 import Link from "next/link"
+import Image from "next/image"
 
 const Header = () => {
   return (
-    <header className="bg-blue-600 text-white p-4">
+    <header className="bg-blue-600 px-4 text-white">
       <div className="flex items-center justify-between">
-        <div className="text-lg font-bold">Saint-Vinci</div>
+        <Image
+            src="/logo-saint-vinci.png"
+            alt="Saint-Vinci Logo"
+            width={80}
+            height={50}
+          />
         <nav>
           <ul className="flex space-x-6">
             <li>
