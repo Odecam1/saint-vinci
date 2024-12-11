@@ -50,7 +50,11 @@ const Login = () => {
       } else {
         cookies.set("vinci-jwt-token", json.jwtToken)
 
-        router.push(routes.home())
+        const next =
+          new URLSearchParams(window.location.search).get("next") ||
+          routes.home()
+        router.push(next)
+        window.location.href = next
       }
     } catch (e) {
       if (e instanceof Error) {

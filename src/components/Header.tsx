@@ -1,22 +1,28 @@
-import routes from "@/utils/routes"
-import Link from "next/link"
+import routes from "@/utils/statics/routes"
 import Image from "next/image"
+import Link from "next/link"
 
 const Header = () => {
   return (
     <header className="bg-blue-600 px-4 text-white">
       <div className="flex items-center justify-between">
         <Image
-            src="/logo-saint-vinci.png"
-            alt="Saint-Vinci Logo"
-            width={80}
-            height={50}
-          />
+          src="/logo-saint-vinci.png"
+          alt="Saint-Vinci Logo"
+          width={110}
+          height={120}
+          className="m-2 invert"
+        />
         <nav>
           <ul className="flex space-x-6">
             <li>
               <Link href={routes.home()} className="hover:text-gray-300">
                 Accueil
+              </Link>
+            </li>
+            <li>
+              <Link href="test" className="hover:text-gray-300">
+                Test
               </Link>
             </li>
             <li>

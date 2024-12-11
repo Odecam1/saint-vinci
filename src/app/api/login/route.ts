@@ -1,4 +1,4 @@
-import User from "@/database/models/Users"
+import { User } from "@/database/models/Users"
 import connectToDatabase from "@/utils/connectToDatabase"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
