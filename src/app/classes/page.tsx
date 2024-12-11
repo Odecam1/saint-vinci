@@ -1,89 +1,80 @@
+/* eslint-disable no-console */
 "use client"
 
-import { faker } from "@faker-js/faker"
 import React, { useEffect, useState } from "react"
 
-// Définition des types
+// Définition des types pour les étudiants et les classes
 type Student = {
   _id: string
   firstName: string
   lastName: string
   birthDate: string
-  level: string
+  classId: string
   status: string
 }
 
 type Class = {
-  id: string
+  _id: string
+  teacher: string
+  year: number
   level: string
-  students: Student[]
-}
-
-// Génération des niveaux scolaires
-const levels = ["PS", "MS", "GS", "CP", "CE1", "CE2", "CM1", "CM2"]
-
-// Fonction pour générer une classe avec des étudiants
-const generateClass = (level: string): Class => {
-  const studentCount = faker.number.int({ min: 15, max: 25 }) // Entre 15 et 25 élèves
-  const students = Array.from({ length: studentCount }, () => ({
-    _id: crypto.randomUUID(), // Génère un UUID unique pour chaque étudiant
-    firstName: faker.person.firstName(), // Génère un prénom
-    lastName: faker.person.lastName(), // Génère un nom de famille
-    birthDate: faker.date.between({ from: "2010-01-01", to: "2015-01-01" }).toISOString().split("T")[0], // Convertir en string (format YYYY-MM-DD)
-    level,
-    status: faker.helpers.arrayElement(["enrolled", "repeating", "new"]),
-  }))
-
-  return {
-    id: crypto.randomUUID(), // Génère un UUID pour chaque classe
-    level,
-    students,
-  }
 }
 
 const ClassesPage = () => {
-  // État pour gérer les classes initiales
+  // États pour gérer les classes et les étudiants
   const [classes, setClasses] = useState<Class[]>([])
-
-  // État pour gérer la classe actuellement sélectionnée
+  const [students, setStudents] = useState<Student[]>([])
   const [selectedClass, setSelectedClass] = useState<Class | null>(null)
 
-  // Générer les classes après le rendu initial côté client
+  // Récupérer les données de l'API pour les classes et les étudiants
   useEffect(() => {
-    const generatedClasses = levels.map((level) => generateClass(level))
-    setClasses(generatedClasses)
-    setSelectedClass(generatedClasses[0]) // Sélectionne la première classe par défaut
-  }, [])
+    const fetchClassesAndStudents = async () => {
+      try {
+        // Récupérer les classes
+        const classesResponse = await fetch("/api/classes")
+        const classesData = await classesResponse.json()
+        setClasses(classesData.classes)
 
-  // Fonction pour mettre à jour le statut d'un élève
-  const updateStudentStatus = (classId: string, studentId: string, newStatus: string) => {
-    setClasses((prevClasses) =>
-      prevClasses.map((classe) =>
-        classe.id === classId
-          ? {
-              ...classe,
-              students: classe.students.map((student) =>
-                student._id === studentId ? { ...student, status: newStatus } : student
-              ),
-            }
-          : classe
-      )
-    )
-  }
+        // Récupérer les étudiants
+        const studentsResponse = await fetch("/api/students")
+        const studentsData = await studentsResponse.json()
+        setStudents(studentsData.students)
+
+        // Sélectionner la première classe par défaut
+        setSelectedClass(classesData.classes[0])
+      } catch (error) {
+        console.error("Erreur lors de la récupération des données", error)
+      }
+    }
+
+    fetchClassesAndStudents()
+  }, [])
 
   // Fonction pour changer la classe sélectionnée
   const handleClassChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const classId = e.target.value
-    const classToDisplay = classes.find((classe) => classe.id === classId)
-
+    const classToDisplay = classes.find((classe) => classe._id === classId)
+    
     if (classToDisplay) {
       setSelectedClass(classToDisplay)
     }
   }
 
-  // Vérifie que les classes sont disponibles avant de tenter de rendre
-  if (!selectedClass) {
+  // Vérifie que les classes et les étudiants sont disponibles avant de tenter de rendre
+  if (!classes.length || !students.length || !selectedClass) {
     return <div>Loading...</div>
+  }
+
+  // Filtrer les étudiants pour la classe sélectionnée
+  const classStudents = students.filter((student) => student.classId === selectedClass._id)
+
+  // Fonction pour mettre à jour le statut d'un étudiant
+  const updateStudentStatus = (studentId: string, newStatus: string) => {
+    setStudents((prevStudents) =>
+      prevStudents.map((student) =>
+        student._id === studentId ? { ...student, status: newStatus } : student
+      )
+    )
   }
 
   return (
@@ -95,65 +86,56 @@ const ClassesPage = () => {
         <label className="mr-4">Choisissez une classe :</label>
         <select
           className="border p-2"
-          value={selectedClass.id}
+          value={selectedClass._id}
           onChange={handleClassChange}
         >
           {classes.map((classe) => (
-            <option key={classe.id} value={classe.id}>
-              {classe.level}
+            <option key={classe._id} value={classe._id}>
+              {classe.level} - {classe.teacher} - Année {classe.year}
             </option>
           ))}
         </select>
       </div>
 
-      {/* Liste des étudiants */}
-      <div className="mb-6">
-        <h2 className="mb-2 text-xl font-semibold">Classe : {selectedClass.level}</h2>
-        <ul className="space-y-4">
-          {selectedClass.students.map((student) => (
-            <li
-              key={student._id}
-              className="flex items-center justify-between rounded border p-2 shadow-sm"
-            >
-              <div>
-                <p>
-                  <strong>
-                    {student.firstName} {student.lastName}
-                  </strong>{" "}
-                  - {student.level}
-                </p>
-                <p>Date de naissance : {student.birthDate}</p>
-              </div>
-              <div>
-                {/* Boutons pour changer le statut */}
-                <button
-                  onClick={() => updateStudentStatus(selectedClass.id, student._id, "enrolled")}
-                  className={`rounded px-2 py-1 text-sm ${
-                    student.status === "enrolled" ? "bg-green-500 text-white" : "bg-gray-300"
-                  }`}
-                >
-                  Enrolled
-                </button>
-                <button
-                  onClick={() => updateStudentStatus(selectedClass.id, student._id, "repeating")}
-                  className={`ml-2 rounded px-2 py-1 text-sm ${
-                    student.status === "repeating" ? "bg-yellow-500 text-white" : "bg-gray-300"
-                  }`}
-                >
-                  Repeating
-                </button>
-                <button
-                  onClick={() => updateStudentStatus(selectedClass.id, student._id, "new")}
-                  className={`ml-2 rounded px-2 py-1 text-sm ${
-                    student.status === "new" ? "bg-blue-500 text-white" : "bg-gray-300"
-                  }`}
-                >
-                  New
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+      {/* Affichage des étudiants de la classe sélectionnée */}
+      <div>
+        {classStudents.length > 0 ? (
+          <ul className="space-y-4">
+            {classStudents.map((student) => (
+              <li key={student._id} className="flex items-center justify-between rounded border p-2 shadow-sm">
+                <div>
+                  <p>
+                    <strong>{student.firstName} {student.lastName}</strong>
+                  </p>
+                  <p>Date de naissance : {new Date(student.birthDate).toLocaleDateString()}</p>
+                </div>
+                <div>
+                  {/* Boutons pour changer le statut */}
+                  <button
+                    onClick={() => updateStudentStatus(student._id, "enrolled")}
+                    className={`rounded px-2 py-1 text-sm ${student.status === "enrolled" ? "bg-green-500 text-white" : "bg-gray-300"}`}
+                  >
+                    Enrolled
+                  </button>
+                  <button
+                    onClick={() => updateStudentStatus(student._id, "repeating")}
+                    className={`ml-2 rounded px-2 py-1 text-sm ${student.status === "repeating" ? "bg-yellow-500 text-white" : "bg-gray-300"}`}
+                  >
+                    Repeating
+                  </button>
+                  <button
+                    onClick={() => updateStudentStatus(student._id, "new")}
+                    className={`ml-2 rounded px-2 py-1 text-sm ${student.status === "new" ? "bg-blue-500 text-white" : "bg-gray-300"}`}
+                  >
+                    New
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div>Aucun étudiant dans cette classe</div>
+        )}
       </div>
     </div>
   )

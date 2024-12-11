@@ -2,7 +2,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
 // Définition du type pour les étudiants
 type Student = {
@@ -10,22 +10,42 @@ type Student = {
   firstName: string
   lastName: string
   birthDate: string
-  level: string
+  classId: string // Remplace "level" par "classId"
   status: string
 }
 
-const AddStudentsPage = () => {
-  // Liste des niveaux possibles
-  const levels = ["PS", "MS", "GS", "CP", "CE1", "CE2", "CM1", "CM2"]
+type Class = {
+  _id: string
+  teacher: string
+  year: number
+  level: string
+}
 
-  // État pour gérer le formulaire d'ajout
+const AddStudentsPage = () => {
+  // États pour gérer le formulaire d'ajout et les classes disponibles
   const [formData, setFormData] = useState<Omit<Student, "_id">>({
     firstName: "",
     lastName: "",
     birthDate: "",
-    level: levels[0], // Définir le premier niveau par défaut
+    classId: "", // initialisation avec classId
     status: "enrolled",
   })
+  const [classes, setClasses] = useState<Class[]>([])
+
+  // Récupérer les classes depuis l'API
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        const response = await fetch("/api/classes")
+        const data = await response.json()
+        setClasses(data.classes) // Assumer que la réponse a une propriété "classes"
+      } catch (error) {
+        console.error("Erreur lors de la récupération des classes", error)
+      }
+    }
+
+    fetchClasses()
+  }, [])
 
   // Fonction pour ajouter un étudiant
   const addStudent = async (e: React.FormEvent) => {
@@ -50,7 +70,7 @@ const AddStudentsPage = () => {
           firstName: "",
           lastName: "",
           birthDate: "",
-          level: levels[0], // Réinitialise au premier niveau par défaut
+          classId: "", // Réinitialise le classId
           status: "enrolled",
         })
       } else {
@@ -103,16 +123,17 @@ const AddStudentsPage = () => {
         </div>
 
         <div>
-          <label className="block font-medium">Niveau</label>
+          <label className="block font-medium">Classe</label>
           <select
-            value={formData.level}
-            onChange={(e) => setFormData({ ...formData, level: e.target.value })}
+            value={formData.classId}
+            onChange={(e) => setFormData({ ...formData, classId: e.target.value })}
             className="w-full rounded border p-2"
             required
           >
-            {levels.map((level) => (
-              <option key={level} value={level}>
-                {level}
+            <option value="">Sélectionner une classe</option>
+            {classes.map((classe) => (
+              <option key={classe._id} value={classe._id}>
+                {classe.level} - Professeur : {classe.teacher} ({classe.year})
               </option>
             ))}
           </select>
