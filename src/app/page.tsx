@@ -32,10 +32,14 @@ const Home: FC = () => {
             </div>
           </Link>
           </button>
-          <div className="rounded-lg bg-yellow-500 p-6 text-white shadow-lg transition-shadow hover:shadow-xl">
-            <h3 className="text-xl font-medium">Voir les rapports</h3>
-            <p className="mt-2">Consultez les rapports et générez des documents pour les enseignants.</p>
+          <button>
+          <Link href="/list-student">
+          <div className="rounded-lg bg-yellow-500 p-6 text-left text-white shadow-lg transition-shadow hover:shadow-xl">
+            <h3 className="text-xl font-medium">Ajouter la liste des élèves</h3>
+            <p className="mt-2">Téléchargez la liste des élèves et gérez-la facilement.</p>
           </div>
+          </Link>
+          </button>
         </div>
       </section>
     </div>
