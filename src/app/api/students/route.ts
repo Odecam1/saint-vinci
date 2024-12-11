@@ -27,10 +27,10 @@ return NextResponse.json(
 
 export const POST = async (req: Request) => {
   try {
-    const { firstName, lastName, birthDate, classId, level, status } = await req.json()
+    const { firstName, lastName, birthDate, classId, status } = await req.json()
 
     // Vérifier que toutes les données nécessaires sont présentes
-    if (!firstName || !lastName || !birthDate || !classId || !level || !status) {
+    if (!firstName || !lastName || !birthDate || !classId || !status) {
       return NextResponse.json(
         { message: "Tous les champs sont requis." },
         { status: 400 }
@@ -44,7 +44,6 @@ export const POST = async (req: Request) => {
       lastName,
       birthDate,
       classId,
-      level,
       status,
     })
 

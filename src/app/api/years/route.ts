@@ -1,24 +1,34 @@
-// src/app/api/years/route.ts
 import { connectToDatabase } from "@/utils/connectToDatabase"
 import Year from "@/database/models/Year"
 import mongoose from "mongoose"
 import { NextResponse } from "next/server"
 
-// Récupérer toutes les années
 export const GET = async () => {
   try {
+    // Connexion à la base de données
     await connectToDatabase()
 
-    const years = await Year.find()
+    // Trouver l'année active
+    const activeYear = await Year.findOne({ status: "active" })
 
+    // Déconnexion de la base de données
     await mongoose.disconnect()
 
-    return NextResponse.json({ years: years })
+    // Vérifier si une année active a été trouvée
+    if (!activeYear) {
+      return NextResponse.json(
+        { message: "Aucune année active trouvée." },
+        { status: 404 }
+      )
+    }
+
+    // Retourner l'année active
+    return NextResponse.json({ activeYear })
   } catch (error) {
-    // Gestion des erreurs en vérifiant que l'erreur est une instance de Error
+    // Gestion des erreurs
     if (error instanceof Error) {
       return NextResponse.json(
-        { message: "Erreur lors de la récupération des années.", error: error.message },
+        { message: "Erreur lors de la récupération de l'année active.", error: error.message },
         { status: 500 }
       )
     }

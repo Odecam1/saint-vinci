@@ -16,7 +16,6 @@ type Student = {
 type Class = {
   _id: string
   teacher: string
-  year: number
   level: string
 }
 
@@ -91,7 +90,7 @@ const ClassesPage = () => {
         >
           {classes.map((classe) => (
             <option key={classe._id} value={classe._id}>
-              {classe.level} - {classe.teacher} - Année {classe.year}
+              {classe.level} - {classe.teacher}
             </option>
           ))}
         </select>

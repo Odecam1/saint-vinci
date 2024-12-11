@@ -7,7 +7,6 @@ const StudentSchema = new mongoose.Schema({
   lastName: { type: String, required: true },
   birthDate: { type: Date, required: true },
   classId: { type: String, ref: "Class", required: true }, // Référence à la classe
-  level: { type: String, required: true },
   status: { type: String, enum: ["enrolled", "repeating", "new"], required: true },
 })
 

@@ -7,6 +7,6 @@ const YearSchema = new mongoose.Schema({
 })
 
 // Création du modèle pour les années
-const Year = mongoose.model("Year", YearSchema)
+const Year = mongoose.models.Year || mongoose.model("Year", YearSchema)
 
 export default Year

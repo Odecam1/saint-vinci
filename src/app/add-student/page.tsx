@@ -10,14 +10,13 @@ type Student = {
   firstName: string
   lastName: string
   birthDate: string
-  classId: string // Remplace "level" par "classId"
+  classId: string
   status: string
 }
 
 type Class = {
   _id: string
   teacher: string
-  year: number
   level: string
 }
 
@@ -74,7 +73,9 @@ const AddStudentsPage = () => {
           status: "enrolled",
         })
       } else {
-        console.error("Erreur lors de l'ajout de l'étudiant.")
+        const errorData = await response.json()
+        console.error("Erreur lors de l'ajout de l'étudiant.", errorData)
+        console.log('Données envoyées :', formData)
       }
     } catch (error) {
       console.error("Erreur de connexion à l'API :", error)
@@ -133,7 +134,7 @@ const AddStudentsPage = () => {
             <option value="">Sélectionner une classe</option>
             {classes.map((classe) => (
               <option key={classe._id} value={classe._id}>
-                {classe.level} - Professeur : {classe.teacher} ({classe.year})
+                {classe.level} - Professeur : {classe.teacher}
               </option>
             ))}
           </select>

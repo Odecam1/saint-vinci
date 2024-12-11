@@ -4,7 +4,6 @@ import mongoose from "mongoose"
 const ClassSchema = new mongoose.Schema({
   _id: { type: String, required: true },
   teacher: { type: String, required: true },
-  year: { type: Number, required: true },
   level: { type: String, required: true },
 })
 
