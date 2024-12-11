@@ -1,7 +1,19 @@
-import mongoose from "mongoose"
+import mongoose, { type Model } from "mongoose"
 
-const UserSchema = new mongoose.Schema({
-  username: {
+type IUser = {
+  firstName: string
+  lastName: string
+  email: string
+  password: string
+  role: "Directeur" | "Professeur"
+}
+
+const UserSchema = new mongoose.Schema<IUser>({
+  firstName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
     type: String,
     required: true,
   },
@@ -21,4 +33,5 @@ const UserSchema = new mongoose.Schema({
   },
 })
 
-export const User = mongoose.models.User || mongoose.model("User", UserSchema)
+export const User: Model<IUser> =
+  mongoose.models.User || mongoose.model<IUser>("User", UserSchema)
