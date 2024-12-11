@@ -1,0 +1,10 @@
+[
+  {
+    "_id": "675991550a1c028bae2cb375",
+    "firstName": "directeur",
+    "lastName": "admin",
+    "email": "directeur.admin@example.com",
+    "passwordHash": "$2a$10$evcZfmimtTwfuudTRkYrTe/d0LLky/52RshUvdXNP4/lScQCGTSR.",
+    "role": "director"
+  }
+]

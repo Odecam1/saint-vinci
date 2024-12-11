@@ -1,5 +1,5 @@
-import { User } from "@/database/models/Users"
-import { connectToDatabase } from "@/utils/connectToDatabase"
+import User from "@/database/models/Users"
+import connectToDatabase from "@/utils/connectToDatabase"
 import mongoose from "mongoose"
 import { NextResponse } from "next/server"
 

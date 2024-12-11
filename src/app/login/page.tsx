@@ -1,67 +1,113 @@
 "use client"
+import { cn } from "@/lib/utils"
+import apiRoutes from "@/utils/statics/apiRoutes"
+import routes from "@/utils/statics/routes"
+import { Button } from "@@/ui/button"
+import { zodResolver } from "@hookform/resolvers/zod"
+import cookies from "js-cookie"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { FaSpinner } from "react-icons/fa"
+import { z } from "zod"
 
-import React, { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+const UserCredentialsSchema = z.object({
+  email: z.string().email("Veuillez entrer un email valide."),
+  password: z
+    .string()
+    .min(6, "Le mot de passe doit contenir au moins 6 caractères.")
+    .max(50, "Le mot de passe ne peut dépasser 50 caractères."),
+})
 
-const LoginPage = () => {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
+export type UserCredentials = z.infer<typeof UserCredentialsSchema>
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
+const Login = () => {
+  const router = useRouter()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UserCredentials>({
+    resolver: zodResolver(UserCredentialsSchema),
+  })
+  const [error, setError] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
-    if (!email || !password) {
-      setError("Veuillez renseigner tous les champs.")
+  const onSubmit = async (values: UserCredentials) => {
+    setIsLoading(true)
 
-      
-return
+    try {
+      const res = await fetch(apiRoutes.login(), {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+        credentials: "include",
+      })
+      const json = await res.json()
+
+      if (!json.success) {
+        setError(true)
+      } else {
+        cookies.set("vinci-jwt-token", json.jwtToken)
+
+        router.push(routes.home())
+      }
+    } catch (e) {
+      if (e instanceof Error) {
+        console.log(e.message)
+      }
+    } finally {
+      setIsLoading(false)
     }
-
-    setError("") // Réinitialiser les erreurs
-      // Ajouter la logique pour se connecter (API ou autre)
-    // eslint-disable-next-line no-console
-    console.log("Tentative de connexion", { email, password })
   }
 
   return (
     <div className="mt-24 flex items-center justify-center text-slate-700">
-      <form onSubmit={handleLogin} className="w-full max-w-sm rounded bg-white p-6 shadow-md">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full max-w-sm rounded bg-white p-6 shadow-md"
+      >
         <h1 className="mb-4 text-2xl">Connexion</h1>
         {error && <p className="text-red-500">{error}</p>}
         <div className="mb-4">
           <label>Email</label>
           <input
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded border p-2"
+            id="email"
+            {...register("email")}
+            className={cn(
+              "w-full rounded border p-2",
+              errors.email ? "border-red-500" : "",
+            )}
           />
         </div>
         <div className="mb-4">
           <label>Mot de passe</label>
           <input
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded border p-2"
+            {...register("password")}
+            className={cn(
+              "w-full rounded border p-2",
+              errors.password ? "border-red-500" : "",
+            )}
           />
         </div>
-        <Button type="submit" className="mt-4 w-full">
-          Connexion
-        </Button>
-
         <div className="mt-4 text-center">
-          <Link href="/auth/forgetPassword">
-            <Button variant="link" className="mt-2 w-full">
-              Mot de passe oublié ?
-            </Button>
-          </Link>
+          <Button
+            type="submit"
+            className={cn(
+              "mt-4 w-full",
+              isLoading ? "cursor-not-allowed opacity-50" : "",
+            )}
+            disabled={isLoading}
+          >
+            <FaSpinner className={isLoading ? "animate-spin" : "hidden"} />
+            {isLoading ? "Connexion..." : "Se connecter"}
+          </Button>
         </div>
       </form>
     </div>
   )
 }
 
-export default LoginPage
+export default Login

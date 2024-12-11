@@ -1,11 +1,12 @@
+import { Roles } from "@/utils/statics/roles"
 import mongoose, { type Model } from "mongoose"
 
 type IUser = {
   firstName: string
   lastName: string
   email: string
-  password: string
-  role: "Directeur" | "Professeur"
+  passwordHash: string
+  role: Roles
 }
 
 const UserSchema = new mongoose.Schema<IUser>({
@@ -22,13 +23,12 @@ const UserSchema = new mongoose.Schema<IUser>({
     required: true,
     unique: true,
   },
-  password: {
+  passwordHash: {
     type: String,
     required: true,
   },
   role: {
     type: String,
-    enum: ["Directeur", "Professeur"],
     required: true,
   },
 })

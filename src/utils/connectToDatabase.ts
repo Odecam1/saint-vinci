@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-export const connectToDatabase = async () => {
+const connectToDatabase = async () => {
   const MondoUri = process.env.MONGO_URI
 
   if (!MondoUri) {
@@ -9,3 +9,5 @@ export const connectToDatabase = async () => {
 
   await mongoose.connect(MondoUri)
 }
+
+export default connectToDatabase
