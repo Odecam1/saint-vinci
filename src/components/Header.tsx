@@ -6,12 +6,14 @@ const Header = () => {
   return (
     <header className="bg-blue-600 px-4 text-white">
       <div className="flex items-center justify-between">
+        <Link href={routes.home()}>
         <Image
             src="/logo-saint-vinci.png"
             alt="Saint-Vinci Logo"
             width={80}
             height={50}
           />
+        </Link>
         <nav>
           <ul className="flex space-x-6">
             <li>
