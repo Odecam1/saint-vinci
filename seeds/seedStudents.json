@@ -1,0 +1,17 @@
+[
+  {
+    "level": "PS",
+    "firstName": "Denise",
+    "lastName": "Costa",
+    "birthDate": "2020-03-14",
+    "teacherName": "Dufour Zoé"
+  },
+  {
+    "level": "MS",
+    "firstName": "Nathan",
+    "lastName": "Dupont",
+    "birthDate": "2019-07-22",
+    "teacherName": "Becker Nathalie"
+  }
+
+]

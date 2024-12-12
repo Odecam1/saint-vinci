@@ -7,13 +7,11 @@ import Papa from "papaparse"
 import React, { useState } from "react"
 
 type Student = {
-  _id: string
   firstName: string
   lastName: string
   birthDate: string
   level: string
   status: string
-  classId: string
   name: string
 }
 
@@ -38,13 +36,11 @@ const ListStudents = () => {
           console.log(result.data) // Affiche les données du CSV dans la console
           // Convertir le CSV en un tableau d'objets Student
           const studentsData = result.data.map((row: any) => ({
-            _id: crypto.randomUUID(), // Crée un ID unique pour chaque étudiant
             level: row["Niveau"],
             firstName: row["Prénom Élève"],
             lastName: row["Nom Élève"],
             birthDate: row["Date de Naissance"],
             status: "enrolled", // Statut par défaut
-            classId: "", // A rajouter si besoin
             name: `${row["Nom Professeur"]}`, // Exemple de format de nom
           }))
           setStudents(studentsData)
@@ -55,28 +51,37 @@ const ListStudents = () => {
     }
   }
 
-  // Fonction pour publier les étudiants dans la base de données
+  // Fonction pour publier les étudiants dans le fichier JSON
   const handlePublish = async () => {
-    try {
-      const response = await fetch(apiRoutes.liststudents.post(), {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(students),
-      })
+  try {
+    const response = await fetch(apiRoutes.students.getAll(), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(students),
+    })
 
-      if (response.ok) {
-        const data = await response.json()
-        console.log("Élèves publiés avec succès :", data)
-        alert("Les élèves ont été publiés avec succès.")
-      } else {
-        console.error("Erreur lors de la publication des étudiants.")
-      }
-    } catch (error) {
-      console.error("Erreur lors de la publication :", error)
+    // Vérifier si la réponse est vide
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({})) // Essayer d'extraire les erreurs JSON si possible
+      console.error("Erreur lors de l'enregistrement des étudiants :", errorData.message || "Réponse vide")
+      alert("Erreur lors de l'enregistrement des étudiants.")
+
+      
+return
     }
+
+    const data = await response.json()
+    console.log("Étudiants enregistrés avec succès :", data)
+    alert("Les étudiants ont été enregistrés avec succès.")
+  } catch (error) {
+    console.error("Erreur lors de l'enregistrement des étudiants :", error)
+    alert("Erreur lors de l'enregistrement des étudiants.")
   }
+}
+
+
 
   return (
     <div className="p-6">
@@ -127,13 +132,13 @@ const ListStudents = () => {
           </table>
           <div className="mt-6 flex justify-center">
             <Button
-                className="w-fit py-4 text-xl"
-                onClick={handlePublish}
-                variant="default"
+              className="w-fit py-4 text-xl"
+              onClick={handlePublish}
+              variant="default"
             >
-                Publier les étudiants
+              Publier les étudiants
             </Button>
-            </div>
+          </div>
         </div>
       )}
     </div>

@@ -22,7 +22,7 @@ const ViewStudents = () => {
     // Charger les étudiants depuis l'API ou depuis le dossier data-students
     const fetchStudents = async () => {
       try {
-        const response = await fetch(apiRoutes.liststudents.get())
+        const response = await fetch(apiRoutes.students.getAll())
         const data = await response.json()
         setStudents(data) // Remplir avec les données obtenues
       } catch (error) {

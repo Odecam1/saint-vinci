@@ -1,4 +1,4 @@
-import Student from "@/database/models/Students"
+import { Student } from "@/database/models/Students"
 import connectToDatabase from "@/utils/connectToDatabase"
 import { NextResponse } from "next/server"
 
@@ -27,10 +27,10 @@ export const GET = async () => {
 
 export const POST = async (req: Request) => {
   try {
-    const { firstName, lastName, birthDate, classId, status } = await req.json()
+    const { firstName, lastName, birthDate, level, teacherName } = await req.json()
 
     // Vérifier que toutes les données nécessaires sont présentes
-    if (!firstName || !lastName || !birthDate || !classId || !status) {
+    if (!firstName || !lastName || !birthDate || !level || !teacherName) {
       return NextResponse.json(
         { message: "Tous les champs sont requis." },
         { status: 400 },
@@ -39,17 +39,19 @@ export const POST = async (req: Request) => {
 
     // Création de l'étudiant
     const newStudent = new Student({
-      _id: crypto.randomUUID(),
       firstName,
       lastName,
       birthDate,
-      classId,
-      status,
+      level,
+      teacherName,
     })
 
     await newStudent.save()
 
-    return NextResponse.json({ message: "Étudiant ajouté avec succès" })
+    return NextResponse.json({
+      message: "Étudiant ajouté avec succès",
+      student: newStudent,
+    })
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
