@@ -35,6 +35,10 @@ export const POST = async (req: Request) => {
       )
     }
 
+    if (!process.env.JWT_SECRET) {
+      throw new Error("JWT_SECRET is not defined in environment variables")
+    }
+
     const jwtToken = jwt.sign(
       {
         user: {
@@ -56,7 +60,7 @@ export const POST = async (req: Request) => {
       message: "Connexion réussie.",
       jwtToken,
     })
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json(
       { message: "Erreur interne", error: error.message },
       { status: 500 },

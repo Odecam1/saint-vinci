@@ -1,26 +1,26 @@
-import { NextResponse } from "next/server"
 import Student from "@/database/models/Students"
-import { connectToDatabase } from "@/utils/connectToDatabase"
+import connectToDatabase from "@/utils/connectToDatabase"
+import { NextResponse } from "next/server"
 
 export const GET = async () => {
   try {
     await connectToDatabase()
-    
+
     // Récupérer tous les étudiants
     const students = await Student.find()
-    
+
     return NextResponse.json({ students })
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
         { message: "Erreur interne du serveur", error: error.message },
-        { status: 500 }
+        { status: 500 },
       )
     }
-    
-return NextResponse.json(
+
+    return NextResponse.json(
       { message: "Erreur lors de la récupération des étudiants" },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }
@@ -33,7 +33,7 @@ export const POST = async (req: Request) => {
     if (!firstName || !lastName || !birthDate || !classId || !status) {
       return NextResponse.json(
         { message: "Tous les champs sont requis." },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
@@ -49,19 +49,18 @@ export const POST = async (req: Request) => {
 
     await newStudent.save()
 
-    
-return NextResponse.json({ message: "Étudiant ajouté avec succès" })
+    return NextResponse.json({ message: "Étudiant ajouté avec succès" })
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
         { message: "Erreur interne du serveur", error: error.message },
-        { status: 500 }
+        { status: 500 },
       )
     }
-    
-return NextResponse.json(
+
+    return NextResponse.json(
       { message: "Erreur lors de l'ajout de l'étudiant" },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

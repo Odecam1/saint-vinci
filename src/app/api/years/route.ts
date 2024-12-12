@@ -1,5 +1,5 @@
-import { connectToDatabase } from "@/utils/connectToDatabase"
 import Year from "@/database/models/Year"
+import connectToDatabase from "@/utils/connectToDatabase"
 import mongoose from "mongoose"
 import { NextResponse } from "next/server"
 
@@ -18,7 +18,7 @@ export const GET = async () => {
     if (!activeYear) {
       return NextResponse.json(
         { message: "Aucune année active trouvée." },
-        { status: 404 }
+        { status: 404 },
       )
     }
 
@@ -28,14 +28,20 @@ export const GET = async () => {
     // Gestion des erreurs
     if (error instanceof Error) {
       return NextResponse.json(
-        { message: "Erreur lors de la récupération de l'année active.", error: error.message },
-        { status: 500 }
+        {
+          message: "Erreur lors de la récupération de l'année active.",
+          error: error.message,
+        },
+        { status: 500 },
       )
     }
 
     return NextResponse.json(
-      { message: "Erreur inconnue du serveur.", error: "Une erreur inconnue est survenue." },
-      { status: 500 }
+      {
+        message: "Erreur inconnue du serveur.",
+        error: "Une erreur inconnue est survenue.",
+      },
+      { status: 500 },
     )
   }
 }
