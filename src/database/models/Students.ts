@@ -4,6 +4,7 @@ type IStudent = {
   firstName: string
   lastName: string
   birthDate: string
+  statut: string
   classId: Schema.Types.ObjectId
 }
 
@@ -20,6 +21,12 @@ const StudentSchema = new mongoose.Schema<IStudent>({
     type: String,
     required: true,
   },
+  statut: { 
+      type: String, 
+      required: true, 
+      enum: ["enrolled", "repeating"],
+      default: "enrolled"
+    },
   classId: { type: Schema.Types.ObjectId, ref: "Class", required: true },
 })
 

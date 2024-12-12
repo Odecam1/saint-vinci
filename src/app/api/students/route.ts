@@ -39,7 +39,7 @@ export const GET = async () => {
 
 export const POST = async (req: Request) => {
   try {
-    const { firstName, lastName, birthDate, level, teacherName } = await req.json()
+    const { firstName, lastName, birthDate, level, teacherName, statut } = await req.json()
 
     // Vérifier que toutes les données nécessaires sont présentes
     if (!firstName || !lastName || !birthDate || !level || !teacherName) {
@@ -65,6 +65,7 @@ export const POST = async (req: Request) => {
       birthDate,
       level,
       teacherName,
+      statut,
       classId: classDoc._id,  // Associe l'étudiant à la classe en ajoutant l'ID de la classe
     })
 
