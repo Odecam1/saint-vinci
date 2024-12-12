@@ -1,12 +1,16 @@
-import mongoose from "mongoose"
+import mongoose, { type Model } from "mongoose"
 
-// Schéma pour les classes
-const ClassSchema = new mongoose.Schema({
+type IClass = {
+  teacher: string
+  level: string
+}
+
+const ClassSchema = new mongoose.Schema<IClass>({
   teacher: { type: String, required: true },
   level: { type: String, required: true },
 })
 
-// Création du modèle pour les classes
-const Class = mongoose.models.Class || mongoose.model("Class", ClassSchema)
+const Class: Model<IClass> =
+  mongoose.models.Class || mongoose.model<IClass>("Class", ClassSchema)
 
 export default Class
