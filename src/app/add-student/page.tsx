@@ -2,6 +2,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import apiRoutes from "@/utils/statics/apiRoutes"
 import React, { useEffect, useState } from "react"
 
 // Définition du type pour les étudiants
@@ -35,7 +36,7 @@ const AddStudentsPage = () => {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const response = await fetch("/api/classes")
+        const response = await fetch(apiRoutes.classes.getAll())
         const data = await response.json()
         setClasses(data.classes) // Assumer que la réponse a une propriété "classes"
       } catch (error) {
@@ -52,7 +53,7 @@ const AddStudentsPage = () => {
 
     // Envoie la requête POST à l'API
     try {
-      const response = await fetch("/api/students", {
+      const response = await fetch(apiRoutes.students.getAll(), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

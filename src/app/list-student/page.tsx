@@ -2,6 +2,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import apiRoutes from "@/utils/statics/apiRoutes"
 import Papa from "papaparse"
 import React, { useState } from "react"
 
@@ -57,7 +58,7 @@ const ListStudents = () => {
   // Fonction pour publier les étudiants dans la base de données
   const handlePublish = async () => {
     try {
-      const response = await fetch("/api/students/publish", {
+      const response = await fetch(apiRoutes.liststudents.post(), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

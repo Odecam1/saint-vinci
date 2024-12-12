@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 "use client"
 
+import apiRoutes from "@/utils/statics/apiRoutes"
 import React, { useEffect, useState } from "react"
 
 type Student = {
@@ -21,7 +22,7 @@ const ViewStudents = () => {
     // Charger les étudiants depuis l'API ou depuis le dossier data-students
     const fetchStudents = async () => {
       try {
-        const response = await fetch("/path-to-stored-data/data-students/your-file.csv")
+        const response = await fetch(apiRoutes.liststudents.get())
         const data = await response.json()
         setStudents(data) // Remplir avec les données obtenues
       } catch (error) {

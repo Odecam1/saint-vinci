@@ -24,12 +24,12 @@ const Header: FC = () => {
   return (
     <header className="bg-blue-600 px-4 text-white">
       <div className="flex items-center justify-between">
-        <div className="flex flex-row items-center  space-x-6 p-1 align-middle">
+        <div className="flex flex-row items-center  space-x-6 p-1 py-4 align-middle">
           <Link href={routes.home()}>
             <Image
               src="/logo-SAINT_EXUPERY.png"
               alt="Saint-Vinci Logo"
-              width={80}
+              width={120}
               height={50}
               className="m-2 invert"
             />
