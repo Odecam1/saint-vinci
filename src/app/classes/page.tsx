@@ -10,7 +10,6 @@ type Student = {
   lastName: string
   birthDate: string
   classId: string
-  status: string
 }
 
 type Class = {
@@ -53,28 +52,16 @@ const ClassesPage = () => {
   const handleClassChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const classId = e.target.value
     const classToDisplay = classes.find((classe) => classe._id === classId)
-    
-    if (classToDisplay) {
-      setSelectedClass(classToDisplay)
-    }
+    setSelectedClass(classToDisplay || null)
   }
 
   // Vérifie que les classes et les étudiants sont disponibles avant de tenter de rendre
-  if (!classes.length || !students.length || !selectedClass) {
-    return <div>Loading...</div>
+  if (!students.length || !selectedClass) {
+    return <div>Chargement...</div>
   }
 
   // Filtrer les étudiants pour la classe sélectionnée
   const classStudents = students.filter((student) => student.classId === selectedClass._id)
-
-  // Fonction pour mettre à jour le statut d'un étudiant
-  const updateStudentStatus = (studentId: string, newStatus: string) => {
-    setStudents((prevStudents) =>
-      prevStudents.map((student) =>
-        student._id === studentId ? { ...student, status: newStatus } : student
-      )
-    )
-  }
 
   return (
     <div className="p-6">
@@ -107,27 +94,6 @@ const ClassesPage = () => {
                     <strong>{student.firstName} {student.lastName}</strong>
                   </p>
                   <p>Date de naissance : {new Date(student.birthDate).toLocaleDateString()}</p>
-                </div>
-                <div>
-                  {/* Boutons pour changer le statut */}
-                  <button
-                    onClick={() => updateStudentStatus(student._id, "enrolled")}
-                    className={`rounded px-2 py-1 text-sm ${student.status === "enrolled" ? "bg-green-500 text-white" : "bg-gray-300"}`}
-                  >
-                    Enrolled
-                  </button>
-                  <button
-                    onClick={() => updateStudentStatus(student._id, "repeating")}
-                    className={`ml-2 rounded px-2 py-1 text-sm ${student.status === "repeating" ? "bg-yellow-500 text-white" : "bg-gray-300"}`}
-                  >
-                    Repeating
-                  </button>
-                  <button
-                    onClick={() => updateStudentStatus(student._id, "new")}
-                    className={`ml-2 rounded px-2 py-1 text-sm ${student.status === "new" ? "bg-blue-500 text-white" : "bg-gray-300"}`}
-                  >
-                    New
-                  </button>
                 </div>
               </li>
             ))}

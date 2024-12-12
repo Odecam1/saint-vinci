@@ -1,4 +1,5 @@
 import { Student } from "@/database/models/Students"
+import Class from "@/database/models/Class"  // Importer le modèle de la classe
 import connectToDatabase from "@/utils/connectToDatabase"
 import { NextResponse } from "next/server"
 
@@ -8,6 +9,17 @@ export const GET = async () => {
 
     // Récupérer tous les étudiants
     const students = await Student.find()
+
+    // Rechercher ou créer la classe correspondante
+    const level = "some level"
+    const teacherName = "some teacher"
+    let classDoc = await Class.findOne({ level, teacher: teacherName })
+
+    if (!classDoc) {
+      // Si la classe n'existe pas, la créer
+      classDoc = new Class({ level, teacher: teacherName })
+      await classDoc.save()
+    }
 
     return NextResponse.json({ students })
   } catch (error) {
@@ -37,13 +49,23 @@ export const POST = async (req: Request) => {
       )
     }
 
-    // Création de l'étudiant
+    // Rechercher ou créer la classe correspondante
+    let classDoc = await Class.findOne({ level, teacher: teacherName })
+
+    if (!classDoc) {
+      // Si la classe n'existe pas, la créer
+      classDoc = new Class({ level, teacher: teacherName })
+      await classDoc.save()
+    }
+
+    // Création de l'étudiant avec l'ID de la classe
     const newStudent = new Student({
       firstName,
       lastName,
       birthDate,
       level,
       teacherName,
+      classId: classDoc._id,  // Associe l'étudiant à la classe en ajoutant l'ID de la classe
     })
 
     await newStudent.save()
