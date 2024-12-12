@@ -8,9 +8,9 @@ const Header = () => {
       <div className="flex items-center justify-between">
         <Link href={routes.home()}>
         <Image
-            src="/logo-saint-vinci.png"
+            src="/logo-SAINT_EXUPERY.png"
             alt="Saint-Vinci Logo"
-            width={80}
+            width={90}
             height={50}
           />
         </Link>

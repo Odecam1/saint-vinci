@@ -75,7 +75,7 @@ const AddStudentsPage = () => {
       } else {
         const errorData = await response.json()
         console.error("Erreur lors de l'ajout de l'étudiant.", errorData)
-        console.log('Données envoyées :', formData)
+        console.log("Données envoyées :", formData)
       }
     } catch (error) {
       console.error("Erreur de connexion à l'API :", error)

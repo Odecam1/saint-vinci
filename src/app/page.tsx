@@ -6,7 +6,7 @@ const Home: FC = () => {
     <div className="p-8">
       <section className="mb-6 rounded-lg bg-white p-6 shadow-md">
         <h1 className="mb-4 text-3xl font-bold text-gray-800">
-          Bienvenue sur l'application Saint-Vinci
+          Bienvenue sur le logiciel du groupe scolaire Saint Exupery
         </h1>
         <p className="text-lg text-gray-600">
           Gérez efficacement les élèves, les classes et les rapports avec notre application intuitive.
