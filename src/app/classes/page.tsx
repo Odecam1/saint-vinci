@@ -57,12 +57,12 @@ const ClassesPage = () => {
       )
       setStudents(updatedStudents)
 
-      // Ici, tu enverrais une requête API pour sauvegarder le nouveau statut dans la base de données
-      await fetch(`/api/students/${studentId}`, {
-        method: "PUT",
-        body: JSON.stringify({ status: newStatus }),
-        headers: { "Content-Type": "application/json" },
-      })
+      // Envoi de la requête API pour sauvegarder le nouveau statut dans la base de données
+      await fetch(`/api/students${studentId}`, {
+      method: "PUT",
+      body: JSON.stringify({ statut: newStatus }),
+      headers: { "Content-Type": "application/json" },
+    })
     } catch (error) {
       console.error("Erreur lors de la mise à jour du statut", error)
     }
@@ -106,12 +106,11 @@ const ClassesPage = () => {
                 </div>
                 <div className="flex space-x-2">
                   <span
-                  className={`cursor-pointer ${student.status === "repeating" ? "text-red-500" : "text-green-500"}`}
-                  onClick={() => handleStatusChange(student._id, student.status === "repeating" ? "enrolled" : "repeating")}
-                >
-                  {student.status === "repeating" ? "Redoublant" : "Enrôlé"}
-                </span>
-
+                    className={`cursor-pointer ${student.status === "repeating" ? "text-red-500" : "text-green-500"}`}
+                    onClick={() => handleStatusChange(student._id, student.status === "repeating" ? "enrolled" : "repeating")}
+                  >
+                    {student.status === "repeating" ? "Redoublant" : "Enrôlé"}
+                  </span>
                 </div>
               </li>
             ))}

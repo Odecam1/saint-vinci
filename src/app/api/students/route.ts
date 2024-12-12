@@ -3,14 +3,25 @@ import Class from "@/database/models/Class"  // Importer le modèle de la classe
 import connectToDatabase from "@/utils/connectToDatabase"
 import { NextResponse } from "next/server"
 
-export const GET = async () => {
+export const GET = async (req: Request) => {
   try {
     await connectToDatabase()
 
-    // Récupérer tous les étudiants
-    const students = await Student.find()
+    // Initialiser les conditions de recherche
+    const searchConditions: { _id?: string } = {}
 
-    // Rechercher ou créer la classe correspondante
+    const url = new URL(req.url)  // Utilisation correcte de req.url
+    const studentId = url.searchParams.get("studentId")  // Récupérer l'ID de l'étudiant à partir des paramètres de l'URL
+
+    // Si un studentId est fourni, l'ajouter aux conditions de recherche
+    if (studentId) {
+      searchConditions._id = studentId
+    }
+
+    // Récupérer les étudiants selon les conditions de recherche
+    const students = await Student.find(searchConditions)
+
+    // Rechercher ou créer la classe correspondante (exemple avec niveau et professeur)
     const level = "some level"
     const teacherName = "some teacher"
     let classDoc = await Class.findOne({ level, teacher: teacherName })
@@ -21,21 +32,22 @@ export const GET = async () => {
       await classDoc.save()
     }
 
-    return NextResponse.json({ students })
+    return NextResponse.json({ students })  // Retourner les étudiants récupérés
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
         { message: "Erreur interne du serveur", error: error.message },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
     return NextResponse.json(
       { message: "Erreur lors de la récupération des étudiants" },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
+
 
 export const POST = async (req: Request) => {
   try {
