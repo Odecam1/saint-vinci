@@ -39,7 +39,6 @@ export const POST = async (req: Request) => {
 
     // Création de l'étudiant
     const newStudent = new Student({
-      _id: crypto.randomUUID(),
       firstName,
       lastName,
       birthDate,
