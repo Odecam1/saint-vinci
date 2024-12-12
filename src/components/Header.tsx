@@ -27,7 +27,7 @@ const Header: FC = () => {
         <div className="flex flex-row items-center  space-x-6 p-1 align-middle">
           <Link href={routes.home()}>
             <Image
-              src="/logo-saint-vinci.png"
+              src="/logo-SAINT_EXUPERY.png"
               alt="Saint-Vinci Logo"
               width={80}
               height={50}

@@ -1,0 +1,42 @@
+[
+    {
+        "_id": "QYGX8I",
+        "teacher": "Stephanie Snyder",
+        "level": "PS"
+    },
+    {
+        "_id": "U55RKY",
+        "teacher": "Christopher Rodriguez",
+        "level": "MS"
+    },
+    {
+        "_id": "A60TLX",
+        "teacher": "Angelica Thompson",
+        "level": "GS"
+    },
+    {
+        "_id": "SSECAP",
+        "teacher": "Blake Bradley",
+        "level": "CP"
+    },
+    {
+        "_id": "DU9MPF",
+        "teacher": "Sara Buchanan",
+        "level": "CE1"
+    },
+    {
+        "_id": "L78CIS",
+        "teacher": "Thomas Martin",
+        "level": "CE2"
+    },
+    {
+        "_id": "K0P0L0",
+        "teacher": "Robert Warren",
+        "level": "CM1"
+    },
+    {
+        "_id": "ZS0A61",
+        "teacher": "Stacy Reynolds",
+        "level": "CM2"
+    }
+]
