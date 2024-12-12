@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import type { NextApiRequest, NextApiResponse } from "next"
 import Student from "@/database/models/Students"
-import { connectToDatabase } from "@/utils/connectToDatabase"
+import connectToDatabase from "@/utils/connectToDatabase"
 
 // Handler pour publier les étudiants
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
