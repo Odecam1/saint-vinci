@@ -31,15 +31,23 @@ The database contains a `users` collection with user information.
   "lastName": "admin",
   "email": "directeur.admin@example.com",
   "passwordHash": "$2a$10$evcZfmimtTwfuudTRkYrTe/d0LLky/52RshUvdXNP4/lScQCGTSR.",
-  "role": "director"
-}
+  "role": "directrice"
+},
 {
-  "_id": "675b779c806ac10528cd83c0",
-  "firstName": "mayor",
-  "lastName": "admin",
-  "email": "mayor.admin@example.com",
+    "_id": "675b779c806ac10528cd83c0",
+  "firstName": "nathalie",
+  "lastName": "LEMAIRE",
+  "email": "nathalie.lemaire@example.com",
   "passwordHash": "$2a$10$yc2Qje4hYPbAwC3EhZXwmOeeqXBaAXdd87GwJ6jXk5ClhPP3C7BXG",
-  "role": "mayor"
+  "role": "maire"
+},
+{
+  "_id": "675b85c9806ac10528cd83c2",
+  "firstName": "Jean",
+  "lastName": "Paul",
+  "email": "jean.paul@example.com",
+  "passwordHash": "$2a$10$XH/EqfV/6aSOtLabR/p1CODNx6w9tVDeE0f8ivar/90xvRBMGhIQq",
+  "role": "professeur"
 }
 ```
 
