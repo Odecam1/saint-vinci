@@ -5,8 +5,7 @@ const apiRoutes = {
     post: () => "/api/classes",
   },
   students: {
-    single: () => "/api/student",
-    multiple: () => "/api/students",
+    multiple: () => "/api/studentsAll",
   },
 }
 
