@@ -14,7 +14,6 @@ type Student = {
 }
 
 const AddStudentsPage = () => {
-  const [students, setStudents] = useState()
   const [formData, setFormData] = useState<Omit<Student, "_id">>({
     firstName: "",
     lastName: "",
@@ -22,6 +21,7 @@ const AddStudentsPage = () => {
     level: "",
     teacherName: "",
   })
+  const [students, setStudents] = useState<Student[]>([])
 
   // Récupérer les étudiants depuis l'API
   useEffect(() => {

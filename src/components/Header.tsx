@@ -74,14 +74,21 @@ const Header: FC = () => {
                 )}
                 {(auth.getUser().role === roles.DIRECTOR ||
                   auth.getUser().role === roles.MAYOR) && (
-                  <li>
-                    <Link
-                      href="cloturer-annee"
-                      className="rounded  p-2 text-white hover:bg-gray-700"
-                    >
-                      Cloturer l'année
-                    </Link>
-                  </li>
+                  <>
+                    <li>
+                      <Link href="redoublement" className="hover:text-gray-300">
+                        Indiquer un redoublement
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="cloturer-annee"
+                        className="rounded  p-2 text-white hover:bg-gray-700"
+                      >
+                        Cloturer l'année
+                      </Link>
+                    </li>
+                  </>
                 )}
                 {auth.getUser().role === roles.TEACHER && (
                   <li>
