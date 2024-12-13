@@ -1,8 +1,10 @@
 "use client"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import apiRoutes from "@/utils/statics/apiRoutes"
 import Papa from "papaparse"
 import React, { useState } from "react"
+import { FaSpinner } from "react-icons/fa"
 
 type StudentImport = {
   level: string
@@ -21,8 +23,10 @@ type StudentCSV = {
 }
 
 const ListStudents = () => {
+  const [msg, setMsg] = useState("")
   const [students, setStudents] = useState<StudentImport[]>([])
-  const [file, setFile] = useState<File | null>(null)
+  const [file, setFile] = useState<File | null>()
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = e.target.files?.[0]
@@ -53,6 +57,8 @@ const ListStudents = () => {
   }
 
   const handlePublish = async () => {
+    setIsLoading(true)
+
     try {
       const response = await fetch(apiRoutes.students.multiple(), {
         method: "POST",
@@ -72,10 +78,14 @@ const ListStudents = () => {
         return
       }
 
+      setMsg("Le document à bien été chargé")
+
       const data = await response.json()
       console.log("Étudiants enregistrés avec succès :", data)
     } catch (error) {
       console.error("Erreur lors de l'enregistrement des étudiants :", error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -101,6 +111,22 @@ const ListStudents = () => {
 
       {students.length > 0 && (
         <div>
+          <div className="mt-6 flex flex-col items-center justify-center gap-2 ">
+            {msg ? <p className="font-bold text-green-500">{msg}</p> : null}
+            <Button
+              className={cn(
+                "mt-4 w-fit",
+                isLoading ? "cursor-not-allowed opacity-50" : "",
+              )}
+              disabled={isLoading}
+              onClick={handlePublish}
+              variant="default"
+            >
+              <FaSpinner className={isLoading ? "animate-spin" : "hidden"} />
+              Publier les étudiants
+            </Button>
+          </div>
+
           <h2 className="mb-2 text-xl font-semibold">Liste des étudiants</h2>
           <table className="min-w-full table-auto">
             <thead>
@@ -124,15 +150,6 @@ const ListStudents = () => {
               ))}
             </tbody>
           </table>
-          <div className="mt-6 flex justify-center">
-            <Button
-              className="w-fit py-4 text-xl"
-              onClick={handlePublish}
-              variant="default"
-            >
-              Publier les étudiants
-            </Button>
-          </div>
         </div>
       )}
     </div>
