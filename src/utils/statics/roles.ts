@@ -1,6 +1,7 @@
 const roles = {
-  DIRECTOR: "director",
-  TEACHER: "teacher",
+  MAYOR: "maire",
+  DIRECTOR: "directrice",
+  TEACHER: "professeur",
 } as const
 
 export type Roles = (typeof roles)[keyof typeof roles]

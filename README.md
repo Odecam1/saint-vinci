@@ -22,7 +22,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ## configuration
 
-Put in the database the user in users collection:
+The database contains a `users` collection with user information.
 
 ```json
 {
@@ -33,6 +33,28 @@ Put in the database the user in users collection:
   "passwordHash": "$2a$10$evcZfmimtTwfuudTRkYrTe/d0LLky/52RshUvdXNP4/lScQCGTSR.",
   "role": "director"
 }
+{
+  "_id": "675b779c806ac10528cd83c0",
+  "firstName": "mayor",
+  "lastName": "admin",
+  "email": "mayor.admin@example.com",
+  "passwordHash": "$2a$10$yc2Qje4hYPbAwC3EhZXwmOeeqXBaAXdd87GwJ6jXk5ClhPP3C7BXG",
+  "role": "mayor"
+}
 ```
 
-The password for this user is : "**123Azertyuiop.**"
+### Password
+
+For this project, all users have the same password. The password for all users is: "123Azertyuiop."
+
+Please note that this password is hashed using bcrypt before being stored in the database, as seen in the passwordHash field.
+
+### Roles
+
+The users in this project have specific roles:
+
+- **Director**: This role represents the highest level of access within the system. Users with this role have full permissions to manage and oversee the system.
+
+- **Mayor**: This role has access to certain functionalities, but with lower permissions compared to the director role. Mayors can manage certain aspects of the system but cannot perform actions reserved for directors.
+
+- **Teacher**: This role is for users who can manage students, classes, and their data. Teachers have permissions to interact with the system related to education but do not have access to administrative tasks like directors or mayors.

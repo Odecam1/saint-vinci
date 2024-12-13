@@ -1,25 +1,29 @@
-/* eslint-disable no-console */
 "use client"
-
 import { Button } from "@/components/ui/button"
 import apiRoutes from "@/utils/statics/apiRoutes"
 import Papa from "papaparse"
 import React, { useState } from "react"
 
-type Student = {
+type StudentImport = {
+  level: string
   firstName: string
   lastName: string
   birthDate: string
-  level: string
-  status: string
-  name: string
+  teacherName: string
+}
+
+type StudentCSV = {
+  Niveau: string
+  "Prénom Élève": string
+  "Nom Élève": string
+  "Date de Naissance": string
+  "Nom Professeur": string
 }
 
 const ListStudents = () => {
-  const [students, setStudents] = useState<Student[]>([])
+  const [students, setStudents] = useState<StudentImport[]>([])
   const [file, setFile] = useState<File | null>(null)
 
-  // Fonction pour gérer l'upload du fichier CSV
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = e.target.files?.[0]
 
@@ -28,21 +32,18 @@ const ListStudents = () => {
     }
   }
 
-  // Fonction pour parser le fichier CSV
   const handleParseCSV = () => {
     if (file) {
-      Papa.parse(file, {
+      Papa.parse<StudentCSV>(file, {
         complete: (result) => {
-          console.log(result.data) // Affiche les données du CSV dans la console
-          // Convertir le CSV en un tableau d'objets Student
-          const studentsData = result.data.map((row: any) => ({
+          const studentsData: StudentImport[] = result.data.map((row) => ({
             level: row["Niveau"],
             firstName: row["Prénom Élève"],
             lastName: row["Nom Élève"],
             birthDate: row["Date de Naissance"],
-            status: "enrolled", // Statut par défaut
-            name: `${row["Nom Professeur"]}`, // Exemple de format de nom
+            teacherName: row["Nom Professeur"],
           }))
+
           setStudents(studentsData)
         },
         header: true,
@@ -51,43 +52,37 @@ const ListStudents = () => {
     }
   }
 
-  // Fonction pour publier les étudiants dans le fichier JSON
   const handlePublish = async () => {
-  try {
-    const response = await fetch(apiRoutes.students.getAll(), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(students),
-    })
+    try {
+      const response = await fetch(apiRoutes.students.multiple(), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(students),
+      })
 
-    // Vérifier si la réponse est vide
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({})) // Essayer d'extraire les erreurs JSON si possible
-      console.error("Erreur lors de l'enregistrement des étudiants :", errorData.message || "Réponse vide")
-      alert("Erreur lors de l'enregistrement des étudiants.")
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({})) // Essayer d'extraire les erreurs JSON si possible
+        console.error(
+          "Erreur lors de l'enregistrement des étudiants :",
+          errorData.message || "Réponse vide",
+        )
 
-      
-return
+        return
+      }
+
+      const data = await response.json()
+      console.log("Étudiants enregistrés avec succès :", data)
+    } catch (error) {
+      console.error("Erreur lors de l'enregistrement des étudiants :", error)
     }
-
-    const data = await response.json()
-    console.log("Étudiants enregistrés avec succès :", data)
-    alert("Les étudiants ont été enregistrés avec succès.")
-  } catch (error) {
-    console.error("Erreur lors de l'enregistrement des étudiants :", error)
-    alert("Erreur lors de l'enregistrement des étudiants.")
   }
-}
-
-
 
   return (
     <div className="p-6">
       <h1 className="mb-4 text-2xl font-bold">Ajouter la liste des élèves</h1>
 
-      {/* Formulaire d'upload du fichier CSV */}
       <div className="mb-4">
         <input
           type="file"
@@ -104,7 +99,6 @@ return
         </Button>
       </div>
 
-      {/* Tableau d'affichage des données CSV */}
       {students.length > 0 && (
         <div>
           <h2 className="mb-2 text-xl font-semibold">Liste des étudiants</h2>
@@ -125,7 +119,7 @@ return
                   <td className="border px-4 py-2">{student.lastName}</td>
                   <td className="border px-4 py-2">{student.firstName}</td>
                   <td className="border px-4 py-2">{student.birthDate}</td>
-                  <td className="border px-4 py-2">{student.name}</td>
+                  <td className="border px-4 py-2">{student.teacherName}</td>
                 </tr>
               ))}
             </tbody>

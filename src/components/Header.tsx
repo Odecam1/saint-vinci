@@ -1,6 +1,7 @@
 "use client"
+import auth from "@/utils/authentification"
+import roles, { Roles } from "@/utils/statics/roles"
 import routes from "@/utils/statics/routes"
-import cookies from "js-cookie"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -8,17 +9,26 @@ import { FC, useEffect, useState } from "react"
 
 const Header: FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [user, setUser] = useState<{ name: string; role: string } | null>(null)
   const router = useRouter()
 
   useEffect(() => {
-    const token = cookies.get("vinci-jwt-token")
-    setIsAuthenticated(!!token)
-  }, [setIsAuthenticated])
+    const authenticated = auth.isAuthenticate()
+    setIsAuthenticated(authenticated)
+
+    if (authenticated) {
+      const currentUser = auth.getUser()
+      setUser({
+        name: currentUser.firstName + " " + currentUser.lastName,
+        role: currentUser.role as Roles,
+      })
+    }
+  }, [])
 
   const handleLogout = () => {
-    cookies.remove("vinci-jwt-token")
+    auth.logOut()
     setIsAuthenticated(false)
-    router.push(routes.login())
+    router.push(routes.home())
   }
 
   return (
@@ -39,41 +49,67 @@ const Header: FC = () => {
           </Link>
         </div>
         <nav>
-          <ul className="flex space-x-6">
+          <ul className="flex gap-x-2">
             {isAuthenticated && (
               <>
-                <li>
-                  <Link href="#students" className="hover:text-gray-300">
-                    Gestion des élèves
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#classes" className="hover:text-gray-300">
-                    Gestion des classes
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#reports" className="hover:text-gray-300">
-                    Rapports
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#settings" className="hover:text-gray-300">
-                    Paramètres
-                  </Link>
-                </li>
+                {auth.getUser().role === roles.MAYOR && (
+                  <>
+                    <li>
+                      <Link
+                        href={routes.addStudent()}
+                        className="rounded  p-2 text-white hover:bg-gray-700"
+                      >
+                        Ajouter un élève
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href={routes.addstudentsFromFile()}
+                        className="rounded  p-2 text-white hover:bg-gray-700"
+                      >
+                        Ajouter la liste des élèves
+                      </Link>
+                    </li>
+                  </>
+                )}
+                {(auth.getUser().role === roles.DIRECTOR ||
+                  auth.getUser().role === roles.MAYOR) && (
+                  <li>
+                    <Link
+                      href="cloturer-annee"
+                      className="rounded  p-2 text-white hover:bg-gray-700"
+                    >
+                      Cloturer l'année
+                    </Link>
+                  </li>
+                )}
+                {auth.getUser().role === roles.TEACHER && (
+                  <li>
+                    <Link href="redoublement" className="hover:text-gray-300">
+                      Indiquer un redoublement
+                    </Link>
+                  </li>
+                )}
               </>
             )}
           </ul>
         </nav>
-        <button
-          onClick={
-            isAuthenticated ? handleLogout : () => router.push(routes.login())
-          }
-          className="ml-4 rounded bg-gray-700 px-4 py-2 text-white hover:bg-gray-500"
-        >
-          {isAuthenticated ? "Se déconnecter" : "Se connecter"}
-        </button>
+
+        <div className="flex items-center space-x-4">
+          {isAuthenticated && user && (
+            <span className="text-sm text-gray-200">
+              {user.name} ({user.role})
+            </span>
+          )}
+          <button
+            onClick={
+              isAuthenticated ? handleLogout : () => router.push(routes.login())
+            }
+            className="ml-4 rounded bg-gray-700 px-4 py-2 text-white hover:bg-gray-500"
+          >
+            {isAuthenticated ? "Se déconnecter" : "Se connecter"}
+          </button>
+        </div>
       </div>
     </header>
   )
